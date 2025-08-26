@@ -1,6 +1,6 @@
 export const colors =(
     "darkGray"= "#3F3F3F"
-    ,"darkGray"= "#C6C6C6"
+    ,"mediumGray"= "#C6C6C6"
     ,"lightGray"= "#EBEBEB"
     ,"white"= "#fff"
     ,"black"= "#000"
