@@ -1,11 +1,9 @@
-import { Children } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import { colors } from '../global/colors'
 //componente wrapper
 const FlatCard = ({children}) => {
   return (
-    <View style={styles.container}>
-      {children}
-    </View>
+    <View style={styles.container}>{children}</View>
   )
 }
 
@@ -15,10 +13,10 @@ const styles = StyleSheet.create({
     container:{
         justifyContent:"center",
         alignItems:"center",
-        flex:"row",
+        flexDirection:"row",
         backgroundColor: colors.lightGray,
         elevation:10,
-        padding:32,
+        padding:20,
         margin:8
     }
 })

@@ -1,18 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { TextInput } from 'react-native-web'
-import { Icon } from 'react-native-vector-icons/Feather'
+import { StyleSheet, Text, View, TextInput } from 'react-native'
 import { colors } from '../global/colors'
+import Icon from 'react-native-vector-icons/Feather'
 
-const Search = ({setKeyword}) => {
+const Search = ({ setKeyword }) => {
   return (
-    <View style={styles.searchContainer}> 
-      <TextInput 
-      style={style.searchInput}
-        placeholder='Buscar'
-        onChangeText={(text)=>{setKeyword(text)}}
+    <View style={styles.searchContainer}>
+      <TextInput
+      style={styles.searchInput}
+        placeholder='buscar producto'
+        onChangeText={(text) => {setKeyword(text)}}
       />
-      <Icon style={styles.searchIcon} name='search' size={32} color={colors.black}/>
+      <Icon name="search" size={20} color={colors.mediumGray} style={styles.iconSearch} />
     </View>
   )
 }
@@ -20,22 +18,22 @@ const Search = ({setKeyword}) => {
 export default Search
 
 const styles = StyleSheet.create({
-  searchInput:{
-    borderWidth:1,
-    borderColor:colors.darkGray,
-    borderRadius:16,
-    minWidth:"90%",
-    padding:32
+  searchInput: {
+    borderWidth: 1,
+    borderColor: colors.darkGray,
+    borderRadius: 16,
+    minWidth: "85%",
+    padding: 32
   },
-  searchContainer:{
-    flexDirection:"row",
-    alignItems:"center",
-    justifyContent:"space-between",
-    marginHorizontal:16,
-    marginVertical:16
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginHorizontal: 16,
+    marginVertical: 16
   },
-  searchIcon:{
-    position:"absolute",
-    left: 8
+  iconSearch:{
+    position: "absolute",
+    marginLeft: 8
   }
 })

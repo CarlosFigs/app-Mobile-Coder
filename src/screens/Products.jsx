@@ -5,19 +5,20 @@ import LatoRegularText from '../components/LatoRegularText'
 import Search from '../components/Search'
 
 
-const Products = ({ categorySelected }) => {
+const Products = ({ category }) => {
+  console.log(category)
   const [productsFiltered, setProductsFiltered] = useState([])
   const [keyword, setKeyword] = useState("");
   useEffect(() => {
     //esto seria para el filtrado condicional de productos
-    const productsFilteredByCategory = products.filter(producto => producto.category.toLowerCase() === categorySelected.toLowerCase())
+    const productsFilteredByCategory = products.filter(producto => producto.category.toLowerCase() === category.toLowerCase() )
     if (keyword) {//si existe una categoria filtrada podemos filtrar por el dato que coloque el usuario en la barra de busqueda.
-      const productsFilteredByKeyword = productsFilteredByCategory.filter((producto) => { producto.title.includes(keyword.toLowerCase()) })
+      const productsFilteredByKeyword = productsFilteredByCategory.filter((producto) => producto.title.toLowerCase().includes(keyword.toLowerCase()) )
       setProductsFiltered(productsFilteredByKeyword)
     } else {
       setProductsFiltered(productsFilteredByCategory)
     }
-  }, [keyword,categorySelected])
+  }, [keyword,category])
   return (
     <View>
       <Search setKeyword={setKeyword} />
