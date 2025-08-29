@@ -6,9 +6,9 @@ const Search = ({ setKeyword }) => {
   return (
     <View style={styles.searchContainer}>
       <TextInput
-      style={styles.searchInput}
-        placeholder='buscar producto'
-        onChangeText={(text) => {setKeyword(text)}}
+        style={styles.searchInput}
+        placeholder="Buscar producto"
+        onChangeText={(text) => { setKeyword(text) }}
       />
       <Icon name="search" size={20} color={colors.mediumGray} style={styles.iconSearch} />
     </View>
@@ -22,8 +22,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.darkGray,
     borderRadius: 16,
-    minWidth: "85%",
-    padding: 32
+    minWidth: "90%",
+    paddingLeft:32,
+
   },
   searchContainer: {
     flexDirection: "row",
@@ -32,8 +33,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 16
   },
-  iconSearch:{
+  iconSearch: {
     position: "absolute",
-    marginLeft: 8
+    left: 8
   }
 })

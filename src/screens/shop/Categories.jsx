@@ -1,12 +1,13 @@
 import { StyleSheet, FlatList, Pressable, Image, Text} from 'react-native'
-import categories from '../data/categories.json'
-import FlatCard from '../components/FlatCard'
-import { colors } from '../global/colors'
+import categories from '../../data/categories.json'
+import FlatCard from '../../components/FlatCard'
+import { colors } from '../../global/colors'
 
-const Categories = ({setCategorySelected}) => {
+const Categories = ({navigation, route}) => {
+    console.log(route)
     const renderCategoryItem = ({ item }) => {
         return (
-            <Pressable onPress={()=>setCategorySelected(item.title)}>
+            <Pressable onPress={()=>navigation.navigate("Productos",{category: item.title})}>
                 <FlatCard>
                     <Text>{item.title}</Text>
                     <Image width={120} height={50} source={{uri: item.image}} resizeMode='contain' />

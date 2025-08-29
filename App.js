@@ -1,16 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
-import Categories from './src/screens/Categories';
-import Header from './src/components/Header';
 import { useEffect, useState } from 'react';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen'
-import Products from './src/screens/Products';
+import { NavigationContainer } from '@react-navigation/native';
+import TabsNavigation from './src/navigation/tabs/TabsNavigation';
 
 // ESte hook lo que evita es que se oculte la pantalla screen, como la inicial
 SplashScreen.preventAutoHideAsync();
 export default function App() {
-  const [categorySelected, setCategorySelected] = useState("")
   //
   const [loaded, error] = useFonts({
     'Lato-Regular': require('./assets/fonts/Lato-Regular.ttf'),
@@ -25,24 +23,15 @@ export default function App() {
       SplashScreen.hideAsync()
     }
   }, [loaded, error]);
-  if(!loaded && !error){
+  if (!loaded && !error) {
     return null;
   }
   return (
     <>
-      <StatusBar style='auto' />
-      {
-        categorySelected ?
-          <>
-            <Header title="Tienda" subtitle="Productos" />
-            <Products category={categorySelected} />
-          </>
-          :
-          <>
-            <Header title="Tienda" subtitle="Categorias" />
-            <Categories setCategorySelected={setCategorySelected} />
-          </>
-      }
+      <NavigationContainer>
+        <StatusBar style='auto' />
+        <TabsNavigation/>
+      </NavigationContainer>
     </>
   );
 }
