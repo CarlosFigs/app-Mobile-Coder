@@ -4,12 +4,13 @@ import LatoRegularText from '../../components/LatoRegularText'
 import Search from '../../components/Search'
 import { useDispatch, useSelector } from 'react-redux'
 import { setProductSelected } from '../../store/slice/shopSlice'
-
+import { useGetProductsByCategoryQuery } from '../../services/shopApi'
 
 const Products = ({ navigation }) => {
   // const { category } = route.params esto al utilizar redux y los reducer se utilizan los hook para poder recuperar la categoria desde el reducer
   const category = useSelector(state=>state.shopReducer.categorySelected)
-  const products = useSelector(state=>state.shopReducer.products)
+  const {data:productsFilteredByCategory, isLoading,error} = useGetProductsByCategoryQuery(category.toLowerCase())
+  
   const [productsFiltered, setProductsFiltered] = useState([])
   const [keyword, setKeyword] = useState("");
   const dispatch = useDispatch()
@@ -29,14 +30,14 @@ const Products = ({ navigation }) => {
   )}
   useEffect(() => {
     //esto seria para el filtrado condicional de productos
-    const productsFilteredByCategory = products.filter(producto => producto.category.toLowerCase() === category.toLowerCase())
+    // const productsFilteredByCategory = products.filter(producto => producto.category.toLowerCase() === category.toLowerCase())
     if (keyword) {//si existe una categoria filtrada podemos filtrar por el dato que coloque el usuario en la barra de busqueda.
       const productsFilteredByKeyword = productsFilteredByCategory.filter((producto) => producto.title.toLowerCase().includes(keyword.toLowerCase()))
       setProductsFiltered(productsFilteredByKeyword)
     } else {
       setProductsFiltered(productsFilteredByCategory)
     }
-  }, [keyword, category])
+  }, [keyword, category, productsFilteredByCategory])
   return (
     <View>
       <Search setKeyword={setKeyword} />
