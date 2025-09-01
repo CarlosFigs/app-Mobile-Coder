@@ -5,6 +5,8 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen'
 import { NavigationContainer } from '@react-navigation/native';
 import TabsNavigation from './src/navigation/tabs/TabsNavigation';
+import { Provider } from 'react-redux';
+import { Store } from './src/store';
 
 // ESte hook lo que evita es que se oculte la pantalla screen, como la inicial
 SplashScreen.preventAutoHideAsync();
@@ -28,10 +30,12 @@ export default function App() {
   }
   return (
     <>
-      <NavigationContainer>
-        <StatusBar style='auto' />
-        <TabsNavigation/>
-      </NavigationContainer>
+      <Provider store={Store}>
+        <NavigationContainer>
+          <StatusBar style='auto' />
+          <TabsNavigation />
+        </NavigationContainer>
+      </Provider>
     </>
   );
 }
