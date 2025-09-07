@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const cartSlice = createSlice({
+    // en los slices iran las variables de estado, las que se obtengan de la nube y las que no.. y todos los metodos que se utilizan
     name: "carrito",
     initialState: {
         user: "demo",

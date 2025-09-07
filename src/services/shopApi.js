@@ -12,6 +12,8 @@ export const shopApi = createApi({
             query: () => "categories.json"
         }),
         getProductsByCategory: builder.query({
+            //para fireBase las informacion que se consume viene como un objeto
+            //el metodo transform lo convierte en un array
             query:(category)=>`products.json?orderBy="category"&equalTo="${category}"`,
             transformResponse: (response) => {
                 return Object.values(response)

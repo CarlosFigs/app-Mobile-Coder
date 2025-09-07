@@ -9,12 +9,12 @@ const ShopStackNavigation = () => {
   const categorySelected= useSelector(state=>state.shopReducer.categorySelected)
   return (
     <Stack.Navigator
-      initialRouteName='categorias'
+      initialRouteName='Categorias'
       screenOptions={{
         header: ({route})=>(<Header title="Tienda" subtitle={ route.name==="Categorias"?"Home":categorySelected } />),
       }}
     >
-      <Stack.Screen name='categorias' component={Categories} />
+      <Stack.Screen name='Categorias' component={Categories} />
       <Stack.Screen name='Productos' component={Products} />
       <Stack.Screen name='Producto' component={Product} />
     </Stack.Navigator>
