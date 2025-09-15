@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
+    marginTop:10,
     color: colors.white,
     fontFamily: "Lato-Black"
   },

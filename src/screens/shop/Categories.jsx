@@ -13,11 +13,7 @@ const Categories = ({ navigation }) => {
     //     state.shopReducer.categories //aunque sean slices en el index de los slices se les llama reducer por conveccion
     // )
     const {data:categories, isLoading, error} = useGetCategoriesQuery()
-
-
-
     const dispatch = useDispatch()
-
     const handleSelectedCategory = (category) => {
         dispatch(setCategorySelected(category))
         navigation.navigate("Productos")

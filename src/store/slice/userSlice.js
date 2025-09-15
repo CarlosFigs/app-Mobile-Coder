@@ -5,14 +5,22 @@ const userSlice = createSlice({
     initialState: {
         // cuanto la key y el value son el mismo nombre se puede simplificar colocando solo la variable, en el initial state se coloca el key y el value de los valores iniciales(es un objeto)
         // en los slices iran las variables de estado, las que se obtengan de la nube y las que no.. y todos los metodos que se utilizan
-        email: ""
+        email: "",
+        localId: "",
+        image: ""
     },
     reducers: {
         setUserEmail: (state, action) => {
             state.email = action.payload
+        },
+        setLocalId: (state, action) => {
+            state.localId = action.payload
+        },
+        setProfileImage: (state, action) => {
+            state.image = action.payload
         }
     }
 })
 
-export const { setUserEmail } = userSlice.actions
+export const { setUserEmail, setLocalId, setProfileImage } = userSlice.actions
 export default userSlice.reducer
