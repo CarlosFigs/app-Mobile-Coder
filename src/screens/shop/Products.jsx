@@ -1,50 +1,71 @@
-import { StyleSheet, Text, View, FlatList, Pressable, Image } from 'react-native'
+import { StyleSheet, View, FlatList, Pressable, Image } from 'react-native'
 import { useEffect, useState } from 'react'
-import LatoRegularText from '../../components/LatoRegularText'
 import Search from '../../components/Search'
 import { useDispatch, useSelector } from 'react-redux'
 import { setProductSelected } from '../../store/slice/shopSlice'
 import { useGetProductsByCategoryQuery } from '../../services/shopApi'
+import { colors } from '../../global/colors'
+import Loader from '../../components/Loader'
+import FlatCard from '../../components/FlatCard'
+import LatoText from '../../components/LatoText'
 
 const Products = ({ navigation }) => {
-  // const { category } = route.params esto al utilizar redux y los reducer se utilizan los hook para poder recuperar la categoria desde el reducer
-  const category = useSelector(state=>state.shopReducer.categorySelected)
-  const {data:productsFilteredByCategory, isLoading,error} = useGetProductsByCategoryQuery(category.toLowerCase())
-  
+  const category = useSelector(state => state.shopReducer.categorySelected)
+  const { data: productsFilteredByCategory, isLoading, error } = useGetProductsByCategoryQuery(category.toLowerCase())
+
   const [productsFiltered, setProductsFiltered] = useState([])
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState("")
   const dispatch = useDispatch()
 
-  const handleSelectedProduct = (item)=>{
+  const handleSelectedProduct = (item) => {
     dispatch(setProductSelected(item))
     navigation.navigate("Producto")
   }
-    const renderProductItems = ({item}) => {
-      return(
-    <View>
-      <Pressable onPress={()=>handleSelectedProduct(item)}>
-        <LatoRegularText>{item.title}</LatoRegularText>
-        <Image width={120} height={50} source={{uri: item.mainImage}} resizeMode='contain' />
-      </Pressable>
-    </View>
-  )}
+
+  const renderProductItems = ({ item }) => (
+    <Pressable onPress={() => handleSelectedProduct(item)}>
+      <FlatCard>
+        <Image style={styles.image} source={{ uri: item.mainImage }} resizeMode="contain" />
+        <View style={styles.infoContainer}>
+          <LatoText weight="bold" style={styles.title}>{item.title}</LatoText>
+          <LatoText style={styles.description}>{item.shortDescription}</LatoText>
+          <LatoText style={styles.stock}>Stock: {item.stock}</LatoText>
+        </View>
+      </FlatCard>
+    </Pressable>
+  )
+
   useEffect(() => {
-    //esto seria para el filtrado condicional de productos
-    // const productsFilteredByCategory = products.filter(producto => producto.category.toLowerCase() === category.toLowerCase())
-    if (keyword) {//si existe una categoria filtrada podemos filtrar por el dato que coloque el usuario en la barra de busqueda.
-      const productsFilteredByKeyword = productsFilteredByCategory.filter((producto) => producto.title.toLowerCase().includes(keyword.toLowerCase()))
+    if (keyword) {
+      const productsFilteredByKeyword = productsFilteredByCategory?.filter((producto) =>
+        producto.title.toLowerCase().includes(keyword.toLowerCase())
+      )
       setProductsFiltered(productsFilteredByKeyword)
     } else {
       setProductsFiltered(productsFilteredByCategory)
     }
   }, [keyword, category, productsFilteredByCategory])
+
+  if (isLoading) return <Loader visible={true} />
+
+  if (error) {
+    return (
+      <View style={styles.errorContainer}>
+        <LatoText weight="bold" style={styles.errorText}>
+          Hubo un error al cargar los productos
+        </LatoText>
+      </View>
+    )
+  }
+
   return (
-    <View>
+    <View style={styles.container}>
       <Search setKeyword={setKeyword} />
       <FlatList
         data={productsFiltered}
         keyExtractor={item => item.id}
         renderItem={renderProductItems}
+        contentContainerStyle={styles.listContainer}
       />
     </View>
   )
@@ -52,4 +73,44 @@ const Products = ({ navigation }) => {
 
 export default Products
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    paddingHorizontal: 10
+  },
+  listContainer: {
+    paddingBottom: 16
+  },
+  image: {
+    width: 80,
+    height: 80,
+    marginRight: 12
+  },
+  infoContainer: {
+    flex: 1
+  },
+  title: {
+    fontSize: 16,
+    color: colors.textPrimary,
+    marginBottom: 4
+  },
+  description: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 6
+  },
+  stock: {
+    fontSize: 14,
+    color: colors.accentGold
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  errorText: {
+    fontSize: 16,
+    color: colors.danger
+  }
+})

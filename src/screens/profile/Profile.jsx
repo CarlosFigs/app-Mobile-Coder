@@ -129,13 +129,13 @@ const styles = StyleSheet.create({
     imageProfileContainer: {
         width: 128,
         height: 128,
-        borderRadius: 128,
-        backgroundColor: colors.purple,
+        borderRadius:128,
+        backgroundColor: colors.accentBlue,
         justifyContent: 'center',
         alignItems: 'center'
     },
     profilePlaceHolder: {
-        color: colors.white,
+        color: colors.textPrimary,
         fontSize: 48,
     },
     profileData: {
@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
         marginBottom: 16
     },
     map: {
+        margin:20,
         height: 300,
     },
     mapTitle: {

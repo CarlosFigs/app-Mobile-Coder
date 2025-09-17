@@ -1,121 +1,150 @@
-import { StyleSheet, Text, View, Pressable, Image, ScrollView, useWindowDimensions } from 'react-native'
+import { StyleSheet, View, Image, ScrollView, useWindowDimensions, Pressable } from 'react-native'
 import { colors } from '../../global/colors'
-import { useSelector, useDispatch} from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { addItemToCart } from '../../store/slice/cartSlice'
+import LatoText from '../../components/LatoText'
+import ButtonQuantity from '../../components/ButtonQuantity'
+import { useState } from 'react'
 
 const ProductScreen = () => {
-  const product = useSelector(state=>state.shopReducer.productSelected)
-  const {width}= useWindowDimensions()
-  const dispatch = useDispatch()
-  // crear un boton para añadir cantidades
-    return (
-        <ScrollView style={styles.productContainer}>
-            <Text style={styles.textBrand}>{product.brand}</Text>
-            <Text style={styles.textTitle}>{product.title}</Text>
-            <Image
-                source={{ uri: product.mainImage }}
-                alt={product.title}
-                width='100%'
-                height={width * .7}
-                resizeMode='contain'
-            />
-            <Text style={styles.longDescription}>{product.longDescription}</Text>
-            <View style={styles.tagsContainer}>
-                <View style={styles.tags}>
-                    <Text style={styles.tagText}>Tags : </Text>
-                    {
-                        product.tags?.map(tag => <Text key={Math.random()} style={styles.tagText}>{tag}</Text>)
-                    }
-                </View>
+    const product = useSelector(state => state.shopReducer.productSelected)
+    const { width } = useWindowDimensions()
+    const dispatch = useDispatch()
 
-                {
-                    product.discount > 0 && <View style={styles.discount}><Text style={styles.discountText}>-{product.discount}%</Text></View>
-                }
-            </View>
-            {
-                product.stock <= 0 && <Text style={styles.noStockText}>Sin Stock</Text>
-            }
-            <Text style={styles.price}>Precio: ${product.price}</Text>
-            <Pressable
-                style={({ pressed }) => [{ opacity: pressed ? 0.95 : 1 }, styles.addToCartButton]}
-                onPress={()=>dispatch(addItemToCart({product,quantity:2}))}>
-                <Text style={styles.textAddToCart}>Agregar al carrito</Text>
-            </Pressable>
-        </ScrollView>
-    )
+    const [quantity, setQuantity] = useState(1)
+
+    const handleAddToCart = () => {
+        if (product.stock > 0) {
+            dispatch(addItemToCart({ product, quantity }))
+            setQuantity(1)
+        }
+    }
+
+   return (
+  <View style={styles.screen}>
+    <ScrollView
+      style={styles.productContainer}
+      contentContainerStyle={{ paddingBottom: 24 }}
+    >
+      <Image
+        source={{ uri: product.mainImage }}
+        style={[styles.productImage, { height: width * 0.85 }]}
+        resizeMode='contain'
+      />
+      <LatoText weight="bold" style={styles.title}>{product.title}</LatoText>
+
+      <View style={styles.categoryTag}>
+        <LatoText weight="medium" style={styles.categoryText}>{product.category}</LatoText>
+      </View>
+
+      <LatoText weight="bold" style={styles.price}>${product.price}</LatoText>
+
+      <LatoText
+        weight="medium"
+        style={[styles.stock, product.stock > 0 ? styles.inStock : styles.outOfStock]}
+      >
+        {product.stock > 0 ? `Stock disponible: ${product.stock}` : 'Sin stock'}
+      </LatoText>
+
+      <LatoText style={styles.longDescription}>{product.longDescription}</LatoText>
+    </ScrollView>
+    <View style={styles.bottomContainer}>
+      <ButtonQuantity onChange={setQuantity} initial={1} />
+      <Pressable
+        onPress={handleAddToCart}
+        disabled={product.stock <= 0}
+        style={({ pressed }) => [
+          styles.addToCartButton,
+          {
+            opacity: pressed ? 0.9 : 1,
+            backgroundColor: product.stock > 0 ? colors.accentCrimson : colors.divider
+          }
+        ]}
+      >
+        <LatoText weight="bold" style={styles.addToCartText}>
+          {product.stock > 0 ? `Agregar ${quantity} al carrito` : 'No disponible'}
+        </LatoText>
+      </Pressable>
+    </View>
+  </View>
+)
+
 }
 
 export default ProductScreen
 
 const styles = StyleSheet.create({
-    productContainer: {
-        paddingHorizontal: 16,
-        marginVertical: 16
-    },
-    textBrand: {
-        color: colors.grisOscuro,
-    },
-    textTitle: {
-        fontSize: 24,
-        fontWeight: '700'
-    },
-    longDescription: {
-        fontSize: 16,
-        textAlign: 'justify',
-        paddingVertical: 8,
-    },
-    tagsContainer: {
-        flexDirection: 'row',
-        gap: 5,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginVertical: 8
-    },
-    tags: {
-        flexDirection: 'row',
-        gap: 5,
-    },
-    tagText: {
-        fontWeight: '600',
-        fontSize: 14,
-        color: colors.purple
-    },
-    price: {
-        fontWeight: '800',
-        fontSize: 18
-    },
-    discount: {
-        backgroundColor: colors.brightOrange,
-        width: 52,
-        height: 52,
-        borderRadius: 52,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    discountText: {
-        color: colors.white,
-        textAlign: 'center',
-        verticalAlign: 'center'
-    },
-    noStockText: {
-        color: colors.red
-    },
-    price: {
-        fontSize: 24,
-        fontWeight: '700',
-        alignSelf: 'center',
-        paddingVertical: 16
-    },
-    addToCartButton: {
-        padding: 8,
-        paddingHorizontal: 16,
-        backgroundColor: colors.purple,
-        borderRadius: 16,
-        marginVertical: 16
-    },
-    textAddToCart: {
-        color: colors.white,
-        fontSize: 24,
-        textAlign: 'center',
-    }
+  screen: {
+    flex: 1,
+    backgroundColor: colors.backgroundDark,
+  },
+  productContainer: {
+    flex: 1,
+    padding: 16,
+  },
+  productImage: {
+    width: '100%',
+    marginBottom: 8,
+    borderRadius: 12,
+  },
+  title: {
+    fontSize: 22,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  categoryTag: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.accentGold,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  categoryText: {
+    color: colors.textPrimary,
+    fontSize: 12,
+  },
+  price: {
+    fontSize: 24,
+    color: colors.accentCrimson,
+    marginBottom: 8,
+  },
+  stock: {
+    fontSize: 14,
+    marginBottom: 12,
+  },
+  inStock: {
+    color: colors.textSecondary,
+  },
+  outOfStock: {
+    color: colors.accentCrimson,
+  },
+  longDescription: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    textAlign: 'justify',
+    marginBottom: 16,
+  },
+  bottomContainer: {
+    padding: 16,
+    backgroundColor: colors.backgroundDark,
+    borderTopWidth: 1,
+    borderTopColor: colors.divider,
+  },
+  addToCartButton: {
+    paddingVertical: 14,
+    borderRadius: 12,
+    marginTop: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  addToCartText: {
+    color: colors.white,
+    fontSize: 16,
+  },
 })

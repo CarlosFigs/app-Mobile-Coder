@@ -20,7 +20,7 @@ export default Search
 const styles = StyleSheet.create({
   searchInput: {
     borderWidth: 1,
-    borderColor: colors.darkGray,
+    borderColor: colors.border,
     borderRadius: 16,
     minWidth: "90%",
     paddingLeft:32,

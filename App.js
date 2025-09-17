@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import MainNavigator from './src/navigation/MainNavigator';
 import { Provider } from 'react-redux';
 import { store } from './src/store';
+import { colors } from './src/global/colors';
 
 // ESte hook lo que evita es que se oculte la pantalla screen, como la inicial
 SplashScreen.preventAutoHideAsync();
@@ -30,7 +31,7 @@ export default function App() {
   return (
     <>
       <Provider store={store}>
-          <StatusBar style='auto' />
+          <StatusBar barStyle="light" />
           <MainNavigator />
       </Provider>
     </>

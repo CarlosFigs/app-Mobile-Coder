@@ -21,21 +21,21 @@ const TabsNavigation = () => {
                 name='Shop'
                 component={ShopStackNavigation}
                 options={{
-                    tabBarIcon: ({ focused }) => (<Icon size={20} name="shopping-bag" color={focused ? colors.darkGray : colors.mediumGray} />)
+                    tabBarIcon: ({ focused }) => (<Icon size={20} name="shopping-bag" color={focused ? colors.backgroundDark : colors.textSecondary} />)
                 }}
             />
             <Tab.Screen
                 name='Cart'
                 component={CartStackNavigation}
                 options={{
-                    tabBarIcon: ({ focused }) => (<Icon size={20} name="shopping-cart" color={focused ? colors.darkGray : colors.mediumGray} />)
+                    tabBarIcon: ({ focused }) => (<Icon size={20} name="shopping-cart" color={focused ? colors.backgroundDark : colors.textSecondary} />)
                 }}
             />
             <Tab.Screen
                 name="Profile"
                 component={ProfileStackNavigation}
                 options={{
-                    tabBarIcon:({focused}) =>(<Icon size={20} name="user" color={focused ? colors.darkGray : colors.mediumGray} />)
+                    tabBarIcon:({focused}) =>(<Icon size={20} name="user" color={focused ? colors.backgroundDark : colors.textSecondary} />)
                 }}
             />
         </Tab.Navigator>
