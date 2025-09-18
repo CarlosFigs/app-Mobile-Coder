@@ -1,10 +1,12 @@
-import { StyleSheet, Text, View, TextInput, Pressable, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Pressable, Dimensions, Switch } from 'react-native'
 import { colors } from '../../global/colors'
 import { useEffect, useState } from 'react'
 import { useLoginMutation } from '../../services/authApi'
 import { useDispatch } from 'react-redux'
 import { setUserEmail, setLocalId } from '../../store/slice/userSlice'
+import LatoText from '../../components/LatoText'
 import Loader from '../../components/Loader'
+import { clearSession, saveSession } from '../../DB'
 
 const textInputWidth = Dimensions.get('window').width * 0.7
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -12,6 +14,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [peristSession, setPeristSession] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [triggerLogin, result] = useLoginMutation()
     const dispatch = useDispatch()
@@ -28,39 +31,40 @@ const LoginScreen = ({ navigation }) => {
             setErrorMessage("El formato del correo no es válido.")
             return
         }
-
-        if (password.length < 6) {
-            setErrorMessage("La contraseña debe tener al menos 6 caracteres.")
-            return
-        }
-
         triggerLogin({ email, password, returnSecureToken: true })
     }
 
     useEffect(() => {
-        if (result.status === "fulfilled") {
-            dispatch(setUserEmail(result.data.email))
-            dispatch(setLocalId(result.data.localId))
-            setEmail("")
-            setPassword("")
-        } else if (result.status === "rejected" && result.error) {
-            const firebaseError = result.error?.data?.error?.message
-            switch (firebaseError) {
-                case "EMAIL_NOT_FOUND":
-                    setErrorMessage("No existe una cuenta con este correo.")
-                    break
-                case "INVALID_PASSWORD":
-                    setErrorMessage("Contraseña incorrecta.")
-                    break
-                case "INVALID_EMAIL":
-                    setErrorMessage("El correo no es válido.")
-                    break
-                default:
-                    setErrorMessage("No se pudo iniciar sesión. Intenta nuevamente.")
-                    break
+        const guardarDb = async () => {
+            if (result.status === "rejected" && result.error) {
+                const firebaseError = result.error?.data?.error?.message
+                if (firebaseError) {
+                    setErrorMessage("Hubo un error en la clave o en el correo")
+                }
+            }
+
+            if (result.status === "fulfilled") {
+                try {
+                    //de esta manera aunque el switch de "mantener sesion" no este en true igual se ingresa a la app
+                    dispatch(setUserEmail(result.data.email))
+                    dispatch(setLocalId(result.data.localId))
+                    if (peristSession) {
+                        // si y solo si el switch esta en true ingresa y luego graba la session en la DB
+                        await saveSession(result.data.localId, result.data.email)
+                    } else {
+                        clearSession()
+                    }
+
+                    setEmail("")
+                    setPassword("")
+                } catch (error) {
+                    console.log(error)
+                }
             }
         }
+        guardarDb()
     }, [result])
+
 
     return (
         <View style={styles.container}>
@@ -118,6 +122,14 @@ const LoginScreen = ({ navigation }) => {
                     {result.isLoading ? "Iniciando..." : "Iniciar sesión"}
                 </Text>
             </Pressable>
+            <View style={styles.rememberMe}>
+                <LatoText weight='light' style={styles.rememberMeText}>¿Mantener sesion?</LatoText>
+                <Switch
+                    onValueChange={() => setPeristSession(!peristSession)}
+                    value={peristSession}
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                />
+            </View>
         </View>
     )
 }
@@ -185,5 +197,14 @@ const styles = StyleSheet.create({
     },
     underLineText: {
         textDecorationLine: "underline"
+    },
+    rememberMe: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 10
+    },
+    rememberMeText: {
+        color: colors.textSecondary
     }
 })
