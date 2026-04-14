@@ -12,7 +12,7 @@ import * as Location from "expo-location"
 const Profile = () => {
     // const [image, setImage] = useState("") el local state lo remplazamos por el userSlice para traer la informacion desde fireBase con los metodos en profileApi
     // const [errorMsg, setErrorMsg] = useState("")
-    const [location, setLocation] = useState(null)
+    const [location, setLocation] = useState("")
     const [address, setAddress] = useState("")
     const [locationLoaded, setLocationLoaded] = useState(false)
 

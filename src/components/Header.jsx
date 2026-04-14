@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
+
   },
   topRow: {
     flexDirection: 'row',
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'Lato-Black',
     color: colors.textPrimary,
+    padding:8
   },
   subtitle: {
     fontSize: 14,
